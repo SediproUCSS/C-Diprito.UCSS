@@ -3,7 +3,7 @@ from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 import numpy
 import tflearn
-import tensorflow
+from tensorflow.python.framework import ops
 import json
 import random
 import pickle
@@ -48,5 +48,17 @@ for x, documento in enumerate(auxX):
 	entrenamiento.append(cubeta)
 	salida.append(filaSalida)
 
-print(entrenamiento)
-print(salida)
+entrenamiento = numpy.array(entrenamiento)
+salida = numpy.array(salida)
+
+ops.reset_default_graph()
+
+red = tflearn.input_data(shape=[None, len(entrenamiento[0])])
+red = tflearn.fully_connected(red, 10)
+red = tflearn.fully_connected(red, 10)
+red = tflearn.fully_connected(red, len(salida[0]), activation = "softmax")
+red = tflearn.regression(red)
+
+modelo = tflearn.DNN(red)
+modelo .fit(entrenamiento, salida, n_epoch = 1000, batch_size = 12, show_metric = True)
+modelo.save("modelo.tflearn")
