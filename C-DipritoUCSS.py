@@ -8,48 +8,54 @@ import json
 import random
 import pickle
 
-with open("contents.json") as archivo:
+with open("contents.json", encoding = 'utf-8') as archivo:
 	datos = json.load(archivo)
 
-palabras = []
-tags = []
-auxX = []
-auxY = []
+try:
+	with open("variables.pickle", "rb") as archivoPickle:
+		palabras, tags,entrenamiento, salida = pickle.load(archivoPickle)
+except:
+	palabras = []
+	tags = []
+	auxX = []
+	auxY = []
 
-for contents in datos["contents"]:
-	for patrones in contents["patrones"]:
-		auxPalabra = nltk.word_tokenize(patrones)
-		palabras.extend(auxPalabra)
-		auxX.append(auxPalabra)
-		auxY.append(contents["tag"])
+	for contents in datos["contents"]:
+		for patrones in contents["patrones"]:
+			auxPalabra = nltk.word_tokenize(patrones)
+			palabras.extend(auxPalabra)
+			auxX.append(auxPalabra)
+			auxY.append(contents["tag"])
 
-		if contents["tag"] not in tags:
-			tags.append(contents["tag"])
+			if contents["tag"] not in tags:
+				tags.append(contents["tag"])
 
-palabras = [stemmer.stem(w.lower()) for w in palabras if w!= "?"]
-palabras = sorted(list(set(palabras)))
-tags = sorted(tags)
+	palabras = [stemmer.stem(w.lower()) for w in palabras if w!= "?"]
+	palabras = sorted(list(set(palabras)))
+	tags = sorted(tags)
 
-entrenamiento = []
-salida = []
+	entrenamiento = []
+	salida = []
 
-salidaVacia = [0 for _ in range(len(tags))]
+	salidaVacia = [0 for _ in range(len(tags))]
 
-for x, documento in enumerate(auxX):
-	cubeta = []
-	auxPalabra = [stemmer.stem(w.lower()) for w in documento]
-	for w in palabras:
-		if w in auxPalabra:
-			cubeta.append(1)
-		else:
-			cubeta.append(0)
-	filaSalida = salidaVacia[:]
-	filaSalida[tags.index(auxY[x])] = 1
-	entrenamiento.append(cubeta)
-	salida.append(filaSalida)
+	for x, documento in enumerate(auxX):
+		cubeta = []
+		auxPalabra = [stemmer.stem(w.lower()) for w in documento]
+		for w in palabras:
+			if w in auxPalabra:
+				cubeta.append(1)
+			else:
+				cubeta.append(0)
+		filaSalida = salidaVacia[:]
+		filaSalida[tags.index(auxY[x])] = 1
+		entrenamiento.append(cubeta)
+		salida.append(filaSalida)
 
-entrenamiento = numpy.array(entrenamiento)
-salida = numpy.array(salida)
+	entrenamiento = numpy.array(entrenamiento)
+	salida = numpy.array(salida)
+	with open("variables.pickle", "wb") as archivoPickle:
+		pickle.dump((palabras, tags, entrenamiento,salida), archivoPickle)
 
 ops.reset_default_graph()
 
@@ -60,8 +66,11 @@ red = tflearn.fully_connected(red, len(salida[0]), activation = "softmax")
 red = tflearn.regression(red)
 
 modelo = tflearn.DNN(red)
-modelo .fit(entrenamiento, salida, n_epoch = 1000, batch_size = 12, show_metric = True)
-modelo.save("modelo.tflearn")
+try:
+	modelo.load("modelo.tflearn")
+except:
+	modelo .fit(entrenamiento, salida, n_epoch = 1000, batch_size = 12, show_metric = True)
+	modelo.save("modelo.tflearn")
 
 def CDiprotUCSS():
 	while True:
