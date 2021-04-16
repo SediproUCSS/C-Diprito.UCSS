@@ -5,6 +5,6 @@
 		},
 		{"tag":"despedida",
 			"patrones":["adios","hasta la próxima","nos vemos","bye"],
-			"respuestas":["¡Cuídate!", "¡Nos vemos pronto", "¡Te estaré esperando!"]
+			"respuestas":["¡Cuídate!", "¡Nos vemos pronto!", "¡Te estaré esperando!"]
 		}
 ]}
