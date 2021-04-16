@@ -1,0 +1,10 @@
+{"contents":[
+		{"tag":"saludo",
+			"patrones":["hola","un saludo","hello","hi"],
+			"respuestas":["¡Hola! ¿Qué tal?", "¿Cómo te va?", "Qué gusto verte"]
+		},
+		{"tag":"despedida",
+			"patrones":["adios","hasta la próxima","nos vemos","bye"],
+			"respuestas":["¡Cuídate!", "¡Nos vemos pronto", "¡Te estaré esperando!"]
+		}
+]}
