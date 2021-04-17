@@ -1,7 +1,9 @@
 # C-Diprito UCSS
-Chatbot de Sedipro UCSS
+_Chatbot de Sedipro UCSS_
 
 # Developer
-Gherard Chipana
-https://linkedin.com/in/gachipanaq
-https://github.com/gachipanaq
+_Gherard Chipana_
+
+* [Linkedin](https://linkedin.com/in/gachipanaq/)
+* [Twitter](https://twitter.com/Gachipanaq)
+* [GitHub](https://github.com/gachipanaq)
